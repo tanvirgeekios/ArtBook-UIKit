@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet weak var image: UIImageView!
@@ -41,16 +42,32 @@ class DetailVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     }
     
     @IBAction func saveButtonClicked(_ sender: UIButton) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        
+        let newPainting = Paintings(context: context)
+        newPainting.artist = artistText.text
+        newPainting.name = artistText.text
+        if let yearText = yearText.text{
+            if yearText.isInt32{
+                newPainting.year = Int32(yearText)!
+            }
+        }
+        newPainting.id = UUID()
+        let data = image.image?.jpegData(compressionQuality: 0.5)
+        if let data = data{
+            newPainting.image = data
+        }
+        do {
+            try context.save()
+        } catch  {
+            print("Error saving Data")
+        }
     }
-    
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension String{
+    var isInt32:Bool{
+        return Int32(self) != nil
     }
-    */
-
 }
