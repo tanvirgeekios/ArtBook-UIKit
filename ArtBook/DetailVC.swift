@@ -60,9 +60,12 @@ class DetailVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         }
         do {
             try context.save()
+            print("success")
         } catch  {
             print("Error saving Data")
         }
+        
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
